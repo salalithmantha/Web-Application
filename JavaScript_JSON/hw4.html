@@ -1,0 +1,120 @@
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript">
+
+        var jsonDoc;
+
+        function loadJSON(url) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", url, false); //open, send, responseText are
+
+
+            //alert(xmlhttp.status); 
+            try {
+                xmlhttp.send();//properties of XMLHTTPRequest
+                if (xmlhttp.status != 200 && xmlhttp.status != 4) {
+                    alert("file not found");
+                }
+                jsonDoc = xmlhttp.responseText;
+
+            }
+            catch (error) {
+                if (xmlhttp.status != 200 && xmlhttp.status != 4)
+                    alert("file not found");
+            }
+
+
+            //console.log(jsonDoc);
+            return jsonDoc;
+        }
+
+
+        function val() {
+            var x = document.forms["myForm"]["fname"].value.trim();
+
+            if (x == "") {
+                alert("Invalid File Name");
+                return false;
+            }
+            else {
+                var k = loadJSON(x);
+                //document.write(k);
+                parse(k);
+            }
+
+        }
+
+
+        function parse(data) {
+            var obj = JSON.parse(data);
+
+
+            /*
+                    var row=obj.Mainline.Table.Row;
+                    var rowSize=row.length;
+                    alert(rowSize);*/
+            //alert(Object.keys(obj.Mainline.Table).length);
+            if (Object.keys(obj.Mainline.Table).length < 2) {
+                alert("Only header there is no Data");
+                return;
+            }
+
+            if (Object.keys(obj.Mainline.Table.Row).length == 0) {
+                alert("Only header there is no Data");
+                return;
+            }
+            var window1 = window.open("", "", "width=1000px,height=1000px;");
+            var ht = "<table border='1'><tr><th>" + obj.Mainline.Table.Header.Data[0] + "</th><th>" + obj.Mainline.Table.Header.Data[1] + "</th><th>" + obj.Mainline.Table.Header.Data[2] + "</th><th>" + obj.Mainline.Table.Header.Data[3] + "</th><th>" + obj.Mainline.Table.Header.Data[4] + "</th><th>" + obj.Mainline.Table.Header.Data[5] + "</th></tr>"
+            window1.document.write(ht);
+            var row = obj.Mainline.Table.Row;
+            var rowSize = row.length;
+
+            for (var a = 0; a < rowSize; a++) {
+                var row1 = "<tr><td><br/>" + row[a].Company + "</td><td>" + row[a].Services + "</td><td>";
+
+                window1.document.write(row1);
+
+
+                var hubSize = row[a].Hubs.Hub.length;
+                for (var x = 0; x < hubSize; x++) {
+
+                    if (x == 0) {
+
+                        var row2 = row[a].Hubs.Hub[x];
+                        window1.document.write("<ul><li><B>" + row2 + "</B></li>");
+                    }
+                    else {
+
+
+                        var row2 = row[a].Hubs.Hub[x];
+                        window1.document.write("<li>" + row2 + "</li>");
+                    }
+                }
+                window1.document.write("</ul>")
+                var row3 = "</td><td>" + row[a].Revenue + "</td><td><a href=" + row[a].HomePage + ">" + row[a].HomePage + "</a></td><td><img width='100%' height='100%' alt='' src=" + row[a].Logo + "></td></tr>";
+                window1.document.write(row3);
+
+
+            }
+
+
+        }
+
+
+    </script>
+</head>
+
+
+<body>
+<div style="text-align: center;margin-top: 200px;">
+    <form name="myForm" onsubmit="val()" method="post">
+        <h3>Enter URL for Trucking List JSON File</h3>
+        <input type="text" name="fname"><br/><br/>
+        <input type="submit" value="Submit Query">
+
+
+    </form>
+</div>
+</body>
+</html>
