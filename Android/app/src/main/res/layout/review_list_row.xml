@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="10dp">
+
+    <ImageView
+        android:id="@+id/image1"
+        android:layout_width="93dp"
+        android:layout_height="229dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/textView5"
+        android:layout_marginStart="0dp" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView5"
+        android:layout_below="@+id/textView5"
+        android:backgroundTint="#f00"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:progressTint="@color/colorAccent"
+        android:rating="4.3"
+        android:secondaryProgressTint="@color/colorAccent"
+        android:stepSize="0.1" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="135dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="135dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/ratingBar"
+        android:layout_below="@+id/ratingBar"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="295dp"
+        android:layout_height="158dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/ratingBar"
+        android:layout_marginTop="85dp"
+        android:text="TextView" />
+
+
+</RelativeLayout>
