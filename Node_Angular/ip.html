@@ -1,0 +1,1577 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Mypage</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style type="text/css">
+
+        #colorstrip {
+            margin-top: 20px;
+            width: 100%;
+            height: 30px;
+            border-style: solid;
+            border-color: #f7dba0;
+            background-color: #f7dba0;
+            overflow: hidden;
+            text-align: left;
+
+        }
+
+        .Modal {
+            display: block;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 9999;
+            width: 100%;
+            height: 100%;
+            padding-top: 100px;
+            background-color: black;
+            background-color: rgba(0, 0, 0, 0.4);
+            -webkit-transition: 0.5s;
+            overflow: auto;
+            transition: all 0.3s linear;
+        }
+
+        .Modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 4px;
+            max-width: 300px;
+            height: 450px;
+        }
+
+        .ModalOpen {
+            overflow: hidden;
+        }
+
+        .is-hidden {
+            display: none;
+        }
+
+        .is-visuallyHidden {
+            opacity: 0;
+        }
+
+        .Close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 16px;
+        }
+
+        .Close:hover, .Close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .is-blurred {
+            filter: blur(2px);
+            -webkit-filter: blur(2px);
+        }
+
+        html, body {
+            overflow-x: hidden;
+        }
+
+        #resfav {
+            position: relative;
+        }
+
+        #detailsnext {
+            position: relative;
+            left: 2000px;
+
+        }
+
+        .rating-box {
+            position: relative;
+            vertical-align: middle;
+            font-size: 1em;
+            font-family: FontAwesome;
+            display: inline-block;
+            color: gray;
+        }
+
+        .rating-box:before {
+            content: "\f006";
+        }
+
+        .rating {
+            position: absolute;
+            left: 0;
+            top: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            color: #F68127;
+        }
+
+        .rating:before {
+            content: "\f005";
+        }
+
+        .checked {
+            color: orange;
+        }
+
+        .abc .nav {
+            float: right;
+
+        }
+
+        #pegman {
+            margin-top: 5px;
+            padding: 3px;
+            margin-bottom: 10px;
+        }
+
+        #mapper {
+            margin: auto;
+            width: 100%;
+        }
+
+        .custom-select {
+            height: 33px;
+        }
+
+        .topmar {
+            border-top: 1px solid #ddd;
+            margin-top: 41px;
+            padding-top: 40px;
+        }
+
+        .glyphicon-star {
+            color: yellow;
+        }
+
+        .table-responsive {
+            display: none;
+        }
+
+        #nextbt {
+            display: none;
+        }
+
+        #prevbt {
+            display: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        a:hover {
+            text-decoration: none;
+            color: black;
+
+        }
+
+        table {
+            border-top: 1px solid lightgray;
+        }
+
+        th {
+            text-align: center;
+        }
+
+        .center {
+            align-items: center;
+            align-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .control-label:after {
+            content: "*";
+            color: red;
+        }
+
+        .custom-control {
+            margin-left: 10px;
+        }
+
+        .jumbotron {
+            padding-top: 0px;
+            padding-bottom: 10px;
+            background: lightgray;
+            padding-left: -200px !important;
+        }
+
+        @media all and (max-width: 1400px) and (min-width: 780px) {
+            #jumb {
+                max-width: 1000px;
+            }
+        }
+
+
+    </style>
+
+    <script type="application/javascript">
+        street = 0
+        click = -1;
+        placeobj = "";
+        id = "";
+        latdest = 0;
+        lngdest = 0;
+        latorg = 0;
+        lngorg = 0;
+
+        function initialize() {
+            initAutocomplete();
+            initAutocomplete1();
+            if (click == 0) {
+                initMap();
+            }
+        }
+
+        function streetView() {
+            if (street == 0) {
+                street = 1
+            }
+            else {
+                street = 0
+            }
+            initMap();
+        }
+
+        function initAutocomplete() {
+            var defaultBounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng(-90, -180),
+                new google.maps.LatLng(90, 180));
+
+            var input = document.getElementById('location1');
+            var options = {
+                bounds: defaultBounds
+            };
+
+            autocomplete = new google.maps.places.Autocomplete(input, options);
+
+
+        }
+
+        function initAutocomplete1() {
+            var defaultBounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng(-90, -180),
+                new google.maps.LatLng(90, 180));
+
+            var input = document.getElementById('yourlocation');
+            var options = {
+                bounds: defaultBounds
+            };
+
+            autocomplete1 = new google.maps.places.Autocomplete(input, options);
+
+
+            /*autocomplete1.addListener('place_changed', function() {
+                //infowindow.close();
+                var place = autocomplete1.getPlace();
+                console.log(place);
+
+                if (!place.geometry) {
+                    // User entered the name of a Place that was not suggested and
+                    // pressed the Enter key, or the Place Details request failed.
+                    window.alert("No details available for input: '" + place.name + "'");
+                    return;
+                }
+
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport) {
+                    //map.fitBounds(place.geometry.viewport);
+                } else {
+                    stm=place.place_id;
+                    console.log(place.geometry.location);
+                    //map.setZoom(17);  // Why 17? Because it looks good.
+                }
+                //marker.setPosition(place.geometry.location);
+                //marker.setVisible(true);
+            });*/
+
+
+        }
+
+        function initMap() {
+
+
+            directionsService = new google.maps.DirectionsService();
+            directionsDisplay = new google.maps.DirectionsRenderer();
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: latdest, lng: lngdest},
+                zoom: 15
+            });
+
+
+            if (street == 1) {
+                var panorama = new google.maps.StreetViewPanorama(
+                    document.getElementById('map'), {
+                        position: {lat: latdest, lng: lngdest},
+                        pov: {
+                            heading: 34,
+                            pitch: 10
+                        }
+                    });
+                map.setStreetView(panorama);
+            }
+
+
+            var infowindow = new google.maps.InfoWindow();
+            var service = new google.maps.places.PlacesService(map);
+
+            service.getDetails({
+                placeId: id
+            }, function (place, status) {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    console.log(place);
+                    placeobj = place;
+                    placedetails();
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: place.geometry.location
+                    });
+                    google.maps.event.addListener(marker, 'click', function () {
+                        infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+                            'Place ID: ' + place.place_id + '<br>' +
+                            place.formatted_address + '</div>');
+                        infowindow.open(map, this);
+
+
+                    });
+                }
+            });
+
+
+            directionsDisplay.setMap(map);
+            directionsDisplay.setPanel(document.getElementById('routedirections'));
+
+
+            google.maps.event.trigger(map, 'resize');
+        }
+
+
+        function calcRoute() {
+
+            console.log(latorg, lngorg, latdest, lngdest);
+            if (document.getElementById("yourlocation").value != "" && document.getElementById("yourlocation").value != "My location" && document.getElementById("yourlocation").value != "Your location") {
+                var start = document.getElementById("yourlocation").value;
+            }
+            else
+                var start = {lat: latorg, lng: lngorg};
+            var end = {lat: latdest, lng: lngdest};
+            var mode = document.getElementById("travelmode").value;
+
+            var request = {
+                origin: start,
+                destination: end,
+                travelMode: mode,
+                provideRouteAlternatives: true
+            };
+
+            directionsService.route(request, function (result, status) {
+                if (status == 'OK') {
+                    initMap();
+                    directionsDisplay.setDirections(result);
+
+                    console.log(result);
+                }
+            });
+        }
+
+
+    </script>
+
+
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqcIlGrq28X7vTB0_5RegUuvZ6JwwOU8k&libraries=places&callback=initialize">
+    </script>
+
+
+</head>
+<body onload="Get()">
+
+<script type="text/javascript">
+    pages = [];
+    page = 0;
+    temper = 0;
+
+    var rownum1 = 0;
+
+    function Get() {
+        //document.getElementById("timings").innerHTML="hello";
+        if (document.getElementById("currloc").checked)
+            document.getElementById("location1").disabled = true;
+        $.getJSON("http://ip-api.com/json/?callback=?", function (data) {
+            console.log(data.region);
+            loc = data;
+            latorg = loc.lat;
+            lngorg = loc.lon;
+            document.getElementById("lat").value = loc.lat;
+            document.getElementById("long").value = loc.lon;
+            console.log(loc.lat, loc.lon);
+            search = 1;
+            updateFav();
+
+
+            return;
+        });
+    }
+</script>
+<div id="myModal" class="Modal is-hidden is-visuallyHidden">
+    <!-- Modal content -->
+    <div class="Modal-content">
+        <span id="closeModal" class="Close">&times;</span>
+        <div id="timings">Simple Modal</div>
+    </div>
+</div>
+
+
+<div id="angid" ng-app="myform" ng-controller="formController">
+
+    <div id="divCheckbox" style="display: none;">
+        <button id='yelpclick' ng-click="yelprev1()"></button>
+    </div>
+    <div class="container" id="jumb">
+        <div class="jumbotron">
+
+            <form name="id1" id="id1" action="#" method="post">
+
+
+                <div class="text-center">
+                    <div class="row">
+                        <div class="col-md-12"><h3 style="padding-top: 0">Travel and Entertainment Search</h3></div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2 "><label for="keyword" class="control-label">Keyword</label></div>
+                    <div class="col-md-6"><input type="text" ng-model="keyword" required="required" id="keyword"
+                                                 class="form-control req " oninput="keywordfun()">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4"><p id="keywordR" style="font-size: 16px;color: red"></p></div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2 "><label for="category">Category</label></div>
+                    <div class="col-md-4 "><select ng-model="category" class="custom-select" id="category">
+                        <option selected value="default">default</option>
+                        <option value="Airport">Airport</option>
+                        <option value="Amusement_Park">Amusement Park</option>
+                        <option value="Aquarium">Aquarium</option>
+                        <option value="Art_Gallery">Art Gallery</option>
+                        <option value="Bakery">Bakery</option>
+                        <option value="Bar">Bar</option>
+                        <option value="Beauty_salon">Beauty salon</option>
+                        <option value="Bowling_Alley">Bowling Alley</option>
+                        <option value="Bus_Station">Bus Station</option>
+                        <option value="Cafe">Cafe</option>
+                        <option value="Campground">Campground</option>
+                        <option value="Car_Rental">Car Rental</option>
+                        <option value="Casino">Casino</option>
+                        <option value="Lodging">Lodging</option>
+                        <option value="Movie_Theater">Movie Theater</option>
+                        <option value="Museum">Museum</option>
+                        <option value="Night_club">Night Club</option>
+                        <option value="Park">Park</option>
+                        <option value="Parking">Parking</option>
+                        <option value="Restaurant">Restaurant</option>
+                        <option value="Shopping_mall">Shopping Mall</option>
+                        <option value="Stadium">Stadium</option>
+                        <option value="Subway_Station">Subway Station</option>
+                        <option value="Taxi_stand">Taxi Stand</option>
+                        <option value="Train_station">Train Station</option>
+                        <option value="Transit_station">Transit Station</option>
+                        <option value="Travel_Agency">Travel Agency</option>
+                        <option value="Zoo">Zoo</option>
+
+
+                    </select></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2"><p></p></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2"><label for="distance">Distance</label></div>
+                    <div class="col-md-4"><input type="text" ng-model="distance" class="form-control " id="distance"
+                                                 name="distance" placeholder="10">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2"><p></p></div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2"><label class="control-label">From</label></div>
+                    <div class=" col-md-4 custom-control custom-radio custom-control-inline">
+                        <input type="radio" ng-model="currloc" value="currloc" checked="checked" id="currloc"
+                               name="from"
+                               class="custom-control-input">
+                        <label class="custom-control-label" for="currloc">Current location</label>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4 custom-control custom-radio custom-control-inline">
+                        <input type="radio" ng-model="currloc" value="customloc" checked="checked" id="customloc"
+                               name="from"
+                               class="custom-control-input">
+                        <label class="custom-control-label" for="customloc">Other, Please specify:</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <div class="col-md-5"><input type="text" ng-model="location1" class="form-control"
+                                                 disabled="disabled" id='location1'
+                                                 name="location1" placeholder="Enter a location"
+                                                 oninput="locationfun()"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <div class="col-md-4"><p id="location1R" style="font-size: 16px;color: red"></p></div>
+                </div>
+
+
+                <div class="row ">
+                    <div class="col-md-2"></div>
+                    <div class="col-lg-3 col-md-5  col-xs-12">
+                        <button type="button" class="btn btn-primary" id="submit1" disabled="disabled"
+                                ng-click="submit()">
+                            <span class="glyphicon glyphicon-search"></span> Search
+                        </button>
+                        &nbsp&nbsp&nbsp
+                        <button type="button" class="btn btn-light " ng-click="clear1()">
+                            Clear
+                        </button>
+                    </div>
+
+                </div>
+
+                <input type="hidden" value="" id="lat" ng-model="lat" name="lat">
+                <input type="hidden" value="" id="long" ng-model="long" name="long">
+
+
+            </form>
+        </div>
+    </div>
+    <div class="container" style="margin-bottom: 50px">
+        <ul class="nav nav-pills col-md-offset-5 col-xs-offset-4 col-sm-offset-5">
+            <li class="active"><a data-toggle="pill" id="clearTabres" onclick="favlcli();" href="#results">Results</a>
+            </li>
+            <li><a data-toggle="pill" href="#favorites" onclick="favlcli();">Favorites</a></li>
+        </ul>
+    </div>
+
+    <div class="container" id="progress">
+    </div>
+
+    <div id="resfav">
+
+
+        <div class="tab-content center">
+            <div id="results" class="tab-pane fade in active">
+                <script type="application/javascript">
+                    function tableprint(post1) {
+
+                        if (temper == 1) {
+                            $('#hidefav').click();
+
+                        }
+
+
+                        document.getElementById("table").style.display = "inline-block";
+
+
+                        //var btnext = "<Button  class='btn btn-sm btn-default' id='nextbt' >Next</Button>";
+
+                        //var btprev = "<Button class='btn btn-sm btn-default'>Previous</Button>";
+                        var dtbt = "<button disabled id=\"details\" class=\"btn btn-sm btn-default\" onclick=\"details1()\">Details<span\n" +
+                            "                            class=\"glyphicon glyphicon-chevron-right\"></span></button>\n";
+
+                        var obj = post1;
+
+                        if (obj.status != "OK") {
+                            var norec = "<div id='colorstrip'>No Records.</div>"
+                            document.getElementById("table").innerHTML = norec;
+                            document.getElementById("nextbt").style.display = "none";
+                            document.getElementById("prevbt").style.display = "none";
+                            document.getElementById("progress").innerHTML = "";
+                        }
+                        else {
+                            result = obj.results;
+                            if (document.id1.from[1].checked && obj.latdet != 0 && obj.lngdet != 0) {
+                                latorg = obj.latdet;
+                                lngorg = obj.lngdet;
+                            }
+                            var placeTable = "<table class='table table-hover' id='myTable'><thead><tr><th>#</th><th>Category</th><th>Name</th><th>Address</th><th>Favorites</th><th>Details</th></tr></thead><tbody>";
+                            var row = "";
+                            for (var i = 0; i < result.length; i++) {
+                                row += "<tr class='clickable'><td>" + (i + 1) + "</td><td><img width='40px' height='40px' src=" + result[i].icon + " ></td><td>" + result[i].name + "</td><td>" + result[i].vicinity + "</td><td><a href='javascript:void(0);' class='btn btn-sm btn-default' id='star" + i + "' onclick='call(this);'><span class='glyphicon glyphicon-star-empty'></span> </a></td><td><a href='javascript:void(0)' id='but" + i + "' onclick='detCall(this);' class=\"btn btn-sm btn-default\"><span class=\"glyphicon glyphicon-chevron-right\"></span> </a></td></tr>";
+
+                            }
+                            var placeTable1 = "</tbody></table>"
+                            document.getElementById("progress").innerHTML = "";
+                            document.getElementById("detailsplace").innerHTML = dtbt;
+                            document.getElementById("table").innerHTML = placeTable + row + placeTable1;
+
+
+                            if ("next_page_token" in obj) {
+                                document.getElementById("nextbt").style.display = "inline-block";
+                                //document.getElementById('nextbt').setAttribute('ng-click','next1()');
+                            } else {
+                                document.getElementById("nextbt").style.display = "none";
+                            }
+
+                            if (pages.length != 0) {
+                                document.getElementById("prevbt").style.display = "inline-block";
+                                //document.getElementById('nextbt').setAttribute('ng-click','next1()');
+                            } else {
+                                document.getElementById("prevbt").style.display = "none";
+                            }
+
+
+                            var a = "$('.clickable').click(function() {console.log('hello');});";
+                            // var ab = "$('#myTable').on('click', '.clickable', function(event) {if($(this).hasClass('active')){ $(this).removeClass('active');document.getElementById('details').disabled=true; } else { $(this).addClass('active').siblings().removeClass('active'); document.getElementById('details').disabled=false;}});$('#myTable').on('click', 'tr', function(e) {console.log($(e.currentTarget).index() + 1);});\n";
+                            //     var ac="$('#myTable').on('click', 'tr', function(e) {console.log($(e.currentTarget).index() + 1);rownum=$(e.currentTarget).index();});";
+                            //     addCode(ac);
+
+
+                            // addCode(ab);
+
+
+                            //console.log(abc);
+
+                        }
+                    }
+
+
+                    function call(elmnt) {
+                        if (elmnt.firstChild.getAttribute('class') == "glyphicon glyphicon-star-empty") {
+                            elmnt.firstChild.setAttribute('class', 'glyphicon glyphicon-star');
+                            var rownum = $(elmnt).closest('tr').index();
+                            if ("myobj" in localStorage) {
+                                var myobj = JSON.parse(localStorage.getItem("myobj"));
+                                console.log(myobj);
+                                var key = result[rownum].place_id;
+                                var objcurr = {};
+                                objcurr[key] = result[rownum];
+                                myobj.push(objcurr);
+                                localStorage.setItem("myobj", JSON.stringify(myobj));
+                                // localStorage.removeItem("myobj");
+
+
+                            }
+                            else {
+
+                                var myobj = []
+                                var key = result[rownum].place_id;
+                                var objcurr = {};
+                                objcurr[key] = result[rownum];
+                                myobj.push(objcurr);
+                                localStorage.setItem("myobj", JSON.stringify(myobj));
+                                console.log("not present");
+                            }
+                        }
+
+                        else {
+                            elmnt.firstChild.setAttribute('class', 'glyphicon glyphicon-star-empty');
+                            var rownum = $(elmnt).closest('tr').index();
+
+                            if ("myobj" in localStorage) {
+                                var key = result[rownum].place_id;
+                                var myobj = JSON.parse(localStorage.getItem("myobj"));
+                                for (var i = 0; i < myobj.length; i++) {
+                                    if (key in myobj[i]) {
+                                        myobj.splice(i, 1);
+                                    }
+                                }
+                                if (myobj.length == 0) {
+                                    localStorage.removeItem("myobj");
+                                }
+                                else {
+                                    localStorage.setItem("myobj", JSON.stringify(myobj));
+                                }
+
+
+                            }
+                            else {
+                                console.log("error");
+                            }
+
+
+                        }
+                        updateFav();
+
+                    }
+
+
+                    function call2(elmnt) {
+                        if (elmnt.firstChild.getAttribute('class') == "glyphicon glyphicon-star-empty") {
+                            // rownum=document.getElementById("disp1").innerHTML;
+                            //console.log(rownum);
+                            document.getElementById("star22").firstChild.setAttribute('class', "glyphicon glyphicon-star");
+                            document.getElementById("star" + rownum).firstChild.setAttribute("class", "glyphicon glyphicon-star");
+                            if ("myobj" in localStorage) {
+                                var myobj = JSON.parse(localStorage.getItem("myobj"));
+                                console.log(myobj);
+                                var key = result[rownum].place_id;
+                                var objcurr = {};
+                                objcurr[key] = result[rownum];
+                                myobj.push(objcurr);
+                                localStorage.setItem("myobj", JSON.stringify(myobj));
+                                // localStorage.removeItem("myobj");
+
+
+                            }
+                            else {
+
+                                var myobj = []
+                                var key = result[rownum].place_id;
+                                var objcurr = {};
+                                objcurr[key] = result[rownum];
+                                myobj.push(objcurr);
+                                localStorage.setItem("myobj", JSON.stringify(myobj));
+                                console.log("not present");
+                            }
+
+
+                        }
+                        else {
+                            document.getElementById("star22").firstChild.setAttribute('class', "glyphicon glyphicon-star-empty");
+                            document.getElementById("star" + rownum).firstChild.setAttribute("class", "glyphicon glyphicon-star-empty");
+                            if ("myobj" in localStorage) {
+                                var key = result[rownum].place_id;
+                                var myobj = JSON.parse(localStorage.getItem("myobj"));
+                                for (var i = 0; i < myobj.length; i++) {
+                                    if (key in myobj[i]) {
+                                        myobj.splice(i, 1);
+                                    }
+                                }
+                                if (myobj.length == 0) {
+                                    localStorage.removeItem("myobj");
+                                }
+                                else {
+                                    localStorage.setItem("myobj", JSON.stringify(myobj));
+                                }
+
+
+                            }
+                            else {
+                                console.log("error");
+                            }
+
+                        }
+                        updateFav();
+                    }
+
+
+                    function callTrash(elmnt) {
+                        var rownum = $(elmnt).closest('tr').index();
+                        if ("myobj" in localStorage) {
+                            myobj.splice(rownum, 1);
+                            if (myobj.length == 0) {
+                                localStorage.removeItem("myobj");
+                            }
+                            else {
+                                localStorage.setItem("myobj", JSON.stringify(myobj));
+                            }
+
+                        }
+                        else {
+                            console.log("error");
+                        }
+                        updateFav();
+
+
+                    }
+
+
+                    function updateFav() {
+                        if ("myobj" in localStorage) {
+                            myobj = JSON.parse(localStorage.getItem("myobj"));
+
+                            var dtbt = "                    <button disabled id=\"details1fav\" class=\"btn btn-sm btn-default\" onclick=\"details1fav()\">Details<span\n" +
+                                "                            class=\"glyphicon glyphicon-chevron-right\"></span></button>\n";
+
+
+                            var placeTableFav = "<table class='table table-hover' id='myTablefav'><thead><tr><th>#</th><th>Category</th><th>Name</th><th>Address</th><th>Favorites</th><th>Details</th></tr></thead><tbody>";
+                            var row = "";
+                            for (var i = 0; i < myobj.length; i++) {
+                                var key = Object.keys(myobj[i]);
+                                var inter = myobj[i];
+                                var res = inter[key];
+                                row += "<tr class='clickable'><td>" + (i + 1) + "</td><td><img width='40px' height='40px' src=" + res.icon + " ></td><td>" + res.name + "</td><td>" + res.vicinity + "</td><td><a href='javascript:void(0);' class='btn btn-sm btn-default' id='trash' onclick='callTrash(this);'><span class='glyphicon glyphicon-trash'></span> </a></td><td><a href='javascript:void(0)'  id='butfav" + i + "' onclick='detCallfav(this);' class=\"btn btn-sm btn-default\"><span class=\"glyphicon glyphicon-chevron-right\"></span> </a></td></tr>";
+
+                            }
+                            var placeTableFav1 = "</tbody></table>";
+                            console.log("talbe constucted");
+                            document.getElementById("detailsplacefav").innerHTML = dtbt;
+                            document.getElementById("tablefav").innerHTML = placeTableFav + row + placeTableFav1;
+                            //document.getElementById("tablefav").innerHTML="dhfkalkdfjhakjf";
+
+
+                        }
+                        else {
+                            document.getElementById("detailsplacefav").innerHTML = "";
+                            console.log("no fav");
+                            var norec = "<div id='colorstrip'>No Records.</div>"
+                            document.getElementById("tablefav").innerHTML = norec;
+
+                        }
+                    }
+
+
+                    function detCall(elmnt) {
+                        $("#details1").click();
+                        rownum = $(elmnt).closest('tr').index();
+                        rownum12 = rownum;
+                        console.log(rownum);
+
+                        $("#clearinfotab").click();
+                        if (document.getElementById("star" + rownum).firstChild.getAttribute("class") == "glyphicon glyphicon-star-empty") {
+                            document.getElementById("star22").firstChild.setAttribute("class", "glyphicon glyphicon-star-empty");
+                        }
+                        else {
+                            document.getElementById("star22").firstChild.setAttribute("class", "glyphicon glyphicon-star");
+                        }
+
+
+                        click = 0;
+                        id = result[rownum].place_id;
+                        latdest = result[rownum].geometry.location.lat;
+                        lngdest = result[rownum].geometry.location.lng;
+                        initMap();
+
+                        // $("#resfav").hide();
+                        // $("#detailsnext").show();
+                        document.getElementById("shofav").click();
+
+                        // placedetails(placeobj);
+
+                        document.getElementById('details').disabled = false;
+
+                        // var scope = angular.element(document.getElementById('angid')).scope();
+                        // console.log(scope)
+                        // var ret=scope.yelprev1();
+
+
+                    }
+
+
+                    function detCallfav(elmnt) {
+                        $("#details").click();
+                        rownum = $(elmnt).closest('tr').index();
+                        rownum12 = rownum;
+                        console.log(rownum);
+
+                        $("#clearinfotab").click();
+                        click = 0;
+                        console.log(Object.keys(JSON.parse(localStorage.getItem("myobj"))[0])[0]);
+                        id = Object.keys(JSON.parse(localStorage.getItem("myobj"))[rownum])[0];
+
+                        var res = JSON.parse(localStorage.getItem("myobj"))[rownum];
+                        var kat = res[id];
+                        console.log(kat);
+                        latdest = kat.geometry.location.lat;
+                        lngdest = kat.geometry.location.lng;
+                        initMap();
+                        // $("#resfav").hide();
+                        // $("#detailsnext").show();
+                        document.getElementById("shofav").click();
+
+                        // placedetails(placeobj);
+
+                        document.getElementById('details1fav').disabled = false;
+
+                        // var scope = angular.element(document.getElementById('angid')).scope();
+                        // console.log(scope)
+                        // var ret=scope.yelprev1();
+
+
+                    }
+
+
+                </script>
+                <div class="container">
+                    <div class="container">
+                        <div class="row">
+                            <div id="detailsplace" class="col-xs-offset-9 col-md-offset-11 col-xs-1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive" id="table">
+
+
+                    </div>
+                    <div class="row">
+                        <div id="nextprev" class="col-md-offset-5 col-xs-offset-4 ">
+                            <Button class='btn btn-sm btn-default' id="prevbt" ng-click="prev1()">Previous</Button>
+
+                            <Button class='btn btn-sm btn-default' id='nextbt' ng-click="next1();">Next</Button>
+
+
+                        </div>
+                    </div>
+                    <br/><br/>
+                </div>
+            </div>
+            <div id="favorites" class="tab-pane fade">
+                <div class="container">
+                    <div class="container">
+                        <div class="row">
+                            <div id="detailsplacefav" class="col-xs-offset-9 col-md-offset-11 col-xs-1">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="tablefav">
+
+
+                    </div>
+
+                    <br/><br/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="src.js">
+</script>
+
+<div id="sr1">
+
+</div>
+
+<div id="detailsnext">
+    <div class="container">
+        <div id="heading" class="center"></div>
+
+        <div class='row'>
+            <div class='col-md-1  col-xs-1'><a id='list' class='btn btn-sm btn-default' onclick="listback();"
+                                               href='javascript:void(0)'><span
+                    class='glyphicon glyphicon-chevron-left'></span>List</a>
+            </div>
+            <div class=' col-md-offset-9 col-md-2 col-sm-offset-9 col-xs-offset-5 col-xs-6'>
+                <button href='javascript:void(0);' class='btn btn-sm btn-default' id='star22'
+                        onclick='call2(this);'><span
+                        class='glyphicon glyphicon-star-empty'></span></button>
+                <a class="twitter-share-button" style="margin-left: 5px" href="javascript:void(0)" onclick="twitter();"><img
+                        src="http://cs-server.usc.edu:45678/hw/hw8/images/Twitter.png" height="30px" width="30px"></a>
+            </div>
+        </div>
+
+        <div class="abc">
+            <ul class="nav nav-tabs abc">
+                <li class="active"><a data-toggle="tab" id="clearinfotab" href="#info">Info</a></li>
+                <li><a data-toggle="tab" href="#photos">Photos</a></li>
+                <li><a data-toggle="tab" href="#mapper">Map</a></li>
+                <li><a data-toggle="tab" href="#reviews">Reviews</a></li>
+            </ul>
+        </div>
+
+
+        <div class="tab-content topmar">
+            <div id="info" class="tab-pane fade in active">
+                ...
+            </div>
+            <div id="photos" class="tab-pane fade">
+                ...
+            </div>
+            <div id="mapper" class="tab-pane fade">
+                <form>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="yourlocation">From</label><br/>
+                            <input type="text" class="form-control" id="yourlocation" value="Your location">
+
+                        </div>
+
+                        <div class="col-md-4 ">
+                            <label for="to">To</label>
+                            <input type="text" class="form-control" id="to">
+
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="travelmode">Travel Mode</label>
+                            <select class="custom-select" id="travelmode">
+                                <option selected value="DRIVING">Driving</option>
+                                <option value="BICYCLING">Bicycling</option>
+                                <option value="TRANSIT">Transit</option>
+                                <option value="WALKING">Walking</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1 col-xs-1">
+                            <span>&nbsp</span>
+                            <button onclick="calcRoute();" type="button" class="btn btn-primary" id="getdirec">
+                                Get Directions
+                            </button>
+
+
+                        </div>
+
+
+                    </div>
+
+                </form>
+
+                <div class="row">
+                    <div class="col-md-1">
+                        <button class="btn" id="pegman" onclick="streetView()">
+                            <img src="http://cs-server.usc.edu:45678/hw/hw8/images/Pegman.png" width="40px"
+                                 height="40px">
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="map" style="height: 500px;"></div>
+                    </div>
+                    <div id="routedirections" style="height: 500px;width: 100%"></div>
+
+                </div>
+
+            </div>
+
+            <div id="reviews" class="tab-pane fade">
+                <div class="row">
+                    <div class="col-md-2 col-xs-2">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="googleyelp"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Google Reviews
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" id="gol" onclick="googlereviews();" href="javascript:void(0)">Google
+                                    Reviews</a>
+                                <a class="dropdown-item" id="yel" onclick="yelpreviews();" href="javascript:void(0)">Yelp
+                                    Reviews</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-0 col-xs-offset-4 col-sm-offset-1 col-xs-2">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="orderreviews"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Default Order
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" onclick="deforder();" href="javascript:void(0)">Default
+                                    Order</a>
+                                <a class="dropdown-item" onclick="highrate();" href="javascript:void(0)">Highest
+                                    Rating</a>
+                                <a class="dropdown-item" onclick="lowrate();" href="javascript:void(0)">Lowest
+                                    Rating</a>
+                                <a class="dropdown-item" onclick="mostrecent();" href="javascript:void(0)">Most
+                                    Recent</a>
+                                <a class="dropdown-item" onclick="leastrecent();" href="javascript:void(0)">Least
+                                    Recent</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="renderreviews" style="margin-top: 10px">
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="container">
+    <div id="deto">
+
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+
+    var rownum12 = 0;
+
+    function listback() {
+        // $("#detailsnext").hide();
+        // $("#resfav").show();
+        document.getElementById("hidefav").click();
+
+        for (var i = 0; i < 21; i++) {
+            document.getElementById("myTable").rows[i].style.backgroundColor = "#fff";
+        }
+        document.getElementById("myTable").rows[rownum + 1].style.backgroundColor = "#f7dba0";
+        if (document.getElementById("myTablefav").rows)
+            for (var i = 0; i < document.getElementById("myTablefav").rows.length; i++) {
+                document.getElementById("myTablefav").rows[i].style.backgroundColor = "#fff";
+            }
+        document.getElementById("myTablefav").rows[rownum + 1].style.backgroundColor = "#f7dba0";
+
+        rownum12 = rownum;
+    }
+
+    function details1() {
+        document.getElementById("but" + rownum12).click();
+    }
+
+    function details1fav() {
+        document.getElementById("butfav" + rownum12).click();
+    }
+
+    function googlereviews() {
+
+        document.getElementById("googleyelp").innerHTML = "Google Reviews";
+        // var order=document.getElementById("orderreviews").innerHTML;
+        renderreviews();
+    }
+
+    function yelpreviews() {
+        document.getElementById("googleyelp").innerHTML = "Yelp Reviews";
+        // var order=document.getElementById("orderreviews").innerHTML;
+        renderreviews();
+    }
+
+    function deforder() {
+        document.getElementById("orderreviews").innerHTML = "Default Order";
+        renderreviews();
+
+    }
+
+    function highrate() {
+        // console.log("hfsjalfhsjdak");
+        document.getElementById("orderreviews").innerHTML = "Highest Rating";
+        renderreviews();
+
+    }
+
+    function lowrate() {
+        document.getElementById("orderreviews").innerHTML = "Lowest Rating";
+        renderreviews();
+
+
+    }
+
+    function mostrecent() {
+        document.getElementById("orderreviews").innerHTML = "Most Recent";
+        renderreviews();
+
+
+    }
+
+    function leastrecent() {
+        document.getElementById("orderreviews").innerHTML = "Least Recent";
+        renderreviews();
+
+
+    }
+
+    function renderreviews() {
+        var type = document.getElementById("googleyelp").innerHTML.trim();
+        var order = document.getElementById("orderreviews").innerHTML.trim();
+        console.log(order.trim());
+        var rev1 = "";
+        if (type == "Google Reviews") {
+            rev1 = placeobj.reviews.slice();
+
+            function sortByKey(array, key, bool) {
+                return array.sort(function (a, b) {
+                    var x = a[key];
+                    var y = b[key];
+                    if (bool)
+                        return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+                    else
+                        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                });
+            }
+
+            if (order == "Default Order") {
+                rev = placeobj.reviews;
+                console.log(rev);
+            }
+
+            if (order == "Highest Rating") {
+
+                rev = sortByKey(rev1, 'rating', true);
+            }
+            if (order == "Lowest Rating") {
+                rev = sortByKey(rev1, 'rating', false);
+            }
+            if (order == "Most Recent") {
+
+                rev = sortByKey(rev1, 'time', true);
+            }
+            if (order == "Least Recent") {
+                rev = sortByKey(rev1, 'time', false);
+            }
+
+            var print = "";
+            for (var i = 0; i < rev.length; i++) {
+                print += "<div class='container border rounded' style='margin: 5px'><div class='row'><div class='col-md-1'><a href=" + rev[i].author_url + " target='_blank'><img width='50px' height='50px' src=" + rev[i].profile_photo_url + "></a></div><div class='col-md-9'><div class='container'><div class='row'> <div class='col-md-2 font-weight-bold'><a href=" + rev[i].author_url + "  target='_blank'><span class='text-primary'> " + rev[i].author_name + "</span></a></div></div><div class='row'><div class='col-md-3'> ";
+                for (var j = 0; j < rev[i].rating; j++) {
+                    print += "<span class='fa fa-star checked'></span> ";
+                }
+                var d = new Date(0);
+                d.setUTCSeconds(rev[i].time);
+
+                print += "" + d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "</div></div>";
+
+                print += "<div class='row'><div class='col-md-9'> " + rev[i].text + "</div></div></div></div></div></div>";
+            }
+            document.getElementById("renderreviews").innerHTML = print;
+
+            console.log(rev)
+        }
+        else {
+            //yelp
+
+            if (yelprev == "not found") {
+                document.getElementById("renderreviews").innerHTML = "<div id='colorstrip' style='margin-bottom: 200px'>No Records.</div>";
+
+            }
+            else {
+
+
+                var rev1 = yelprev.reviews;
+                // console.log(yelp);
+                //d.setUTCSeconds(rev[i].time);
+
+
+                function sortByKey(array, key, bool) {
+                    return array.sort(function (a, b) {
+                        var x = a[key];
+                        var y = b[key];
+                        if (bool)
+                            return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+                        else
+                            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+
+
+                    });
+                }
+
+                if (order == "Default Order") {
+                    rev = yelprev.reviews;
+                    console.log(rev);
+                }
+
+                if (order == "Highest Rating") {
+
+                    rev = sortByKey(rev1, 'rating', true);
+                }
+                if (order == "Lowest Rating") {
+                    rev = sortByKey(rev1, 'rating', false);
+                }
+                if (order == "Most Recent") {
+
+                    rev = sortByKey(rev1, 'time_created', true);
+                }
+                if (order == "Least Recent") {
+                    rev = sortByKey(rev1, 'time_created', false);
+                }
+
+
+                var print = "";
+                for (var i = 0; i < rev.length; i++) {
+                    print += "<div class='container border rounded' style='margin: 5px'><div class='row'><div class='col-md-1'><a href=" + rev[i].url + " target='_blank'><img width='50px' style='border-radius: 50%;' height='50px' src=" + rev[i].user.image_url + "></a></div><div class='col-md-9'><div class='container'><div class='row'> <div class='col-md-2 font-weight-bold'><a href=" + rev[i].url + "  target='_blank'><span class='text-primary'> " + rev[i].user.name + "</span></a></div></div><div class='row'><div class='col-md-3'> ";
+                    for (var j = 0; j < rev[i].rating; j++) {
+                        print += "<span class='fa fa-star checked'></span> ";
+                    }
+                    // var d = new Date(0);
+                    // d.setUTCSeconds(rev[i].time);
+                    // print += "" + d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "</div></div>";
+                    print += "" + rev[i].time_created + "</div></div>";
+                    print += "<div class='row'><div class='col-md-9'> " + rev[i].text + "</div></div></div></div></div></div>";
+                }
+
+                document.getElementById("renderreviews").innerHTML = print;
+
+            }
+
+
+        }
+
+        //order reviews
+
+
+    }
+
+    function twitter() {
+
+        var urltweet = "https://twitter.com/intent/tweet?text=Check out " + placeobj.name + " Located at " + placeobj.formatted_address + ". Website:  " + placeobj.website + " . " + "TravelAndEntertainmentSearch";
+
+        window.open(urltweet, "twitter", "height=600,width=600");
+    }
+
+    function placedetails() {
+        $('#yelpclick').click();
+
+
+        var addr = placeobj.formatted_address;
+        var phone = placeobj.international_phone_number;
+        if (phone == undefined) {
+            phone = "";
+        }
+        var price = placeobj.price_level;
+        if (price == undefined) {
+            price = "";
+        }
+        var rating = placeobj.rating;
+        var url = placeobj.url;
+        if (url == undefined) {
+            url = "";
+        }
+        var website = placeobj.website;
+        if (website == undefined) {
+            website = "";
+        }
+        var open = placeobj.opening_hours;
+        var name = placeobj.name;
+        var photo = placeobj.photos;
+
+        if (photo != undefined) {
+
+            var pho = "<div class='row'>";
+
+            for (var i = 0; i < photo.length; i++) {
+                // console.log(photo[i].getUrl({'maxWidth': 350, 'maxHeight': 350}));
+                pho += "<div class='column' style='padding: 0'>";
+                pho += " <img src=" + photo[i].getUrl({
+                    'maxWidth': 350,
+                    'maxHeight': 350
+                }) + " alt='' class='img-thumbnail'>";
+
+                pho += "</div>";
+
+            }
+            pho += "</div>";
+        }
+        else {
+            var pho = "<div id='colorstrip'>No Records.</div>";
+        }
+
+
+        var ht = "<h4>" + name + "</h4>";
+        document.getElementById("heading").innerHTML = ht;
+
+
+        var table = "<table class='table table-hover' id=''><tbody><tr><th>Address</th><td>" + addr + "</td></tr><tr><th>Phone Number</th><td>" + phone + "</td></tr><tr><th>Price Level</th><td>$ " + price + "</td></tr><tr><th>Rating</th><td>";
+        if (rating == undefined) {
+            table += "";
+        }
+        else {
+            table += rating;
+        }
+        var point = Math.floor(rating);
+        for (var j = 0; j < point; j++) {
+            table += "<span class='rating-box'><span class='rating' style='width:100%;'></span></span>";
+        }
+        var diff = rating - point;
+        if (diff > 0) {
+            diff = diff * 100;
+            table += "<span class='rating-box'><span class='rating' style='width:" + diff + "%;'></span></span>";
+        }
+
+        table += "</td></tr><tr><th>Google Page</th><td><a class='text-primary' href='" + url + "' target='_blank'>" + url + "</a></td></tr><tr><th>Website</th><td><a class='text-primary' href='" + website + "' target='_blank'>" + website + "</a> </td>"
+
+        if ("opening_hours" in placeobj) {
+            table += "</tr><tr><th>Hours</th><td>";
+            var date = new Date();
+            var day = date.getDay();
+            if (day == 0) {
+                day = 6;
+            }
+            else {
+                day -= 1;
+            }
+            console.log("dsjaljdksald" + day);
+            if (open.open_now) {
+
+                table += "Open now:" + open.weekday_text[day].split(/:(.+)/)[1];
+            }
+            else {
+                table += "closed";
+            }
+
+
+            table += "<a href='javascript:void(0)' class='' onclick='openhrs();'><span class='text-primary'>&nbsp&nbsp&nbsp&nbspDaily open hours</span></a>"
+            var timer = "";
+            for (var i = 0; i < open.weekday_text.length; i++) {
+                timer += "<p>" + open.weekday_text[i] + "</p>";
+            }
+            document.getElementById("timings").innerHTML = timer;
+
+
+            table += "</td></tr>";
+        }
+        //var btline = "    <div class='row'><div class='col-md-1'><a id='list' class='btn btn-sm btn-default' href='javascript:void(0)'><span class='glyphicon glyphicon-chevron-left'></span>List</a></div><div class=' col-md-offset-9 col-md-2'><button href='javascript:void(0);' class='btn btn-sm btn-default' id='star1' onclick='call(this);'><span class='glyphicon glyphicon-star-empty'></span> </button><button href='javascript:void(0);' class='btn btn-sm btn-default' id='star2' onclick='call(this);'><span class='glyphicon glyphicon-star-empty'></span> </button></div></div>\n";
+
+
+        table += "</tbody></table>";
+        document.getElementById("to").value = name + ", " + addr;
+
+        document.getElementById("info").innerHTML = table;
+        document.getElementById("photos").innerHTML = pho;
+        console.log(placeobj.formatted_address);
+        renderreviews();
+        googlereviews();
+
+    }
+
+
+    $(document).ready(function () {
+        $("#shofav").click(function () {
+            // $("#detailsnext").animate({left: '220%', opacity: '1'}, "slow");
+            temper = 1;
+            $('#resfav').css('position', 'absolute');
+            $('#detailsnext').css('position', 'absolute');
+            $("#detailsnext").css({display: 'block'}, "fast");
+
+            $("#resfav").animate({left: '-200%', opacity: '1'}, "slow");
+            $("#resfav").css({display: 'none'}, "fast");
+            $("#detailsnext").animate({left: '1', opacity: '1'}, "slow");
+            $('#detailsnext').css('position', 'relative');
+
+
+        });
+        $("#hidefav").click(function () {
+            // $("#detailsnext").animate({left: '220%', opacity: '1'}, "slow");
+            $('#resfav').css('position', 'absolute');
+            $("#resfav").css({display: 'block'}, "fast");
+            $("#detailsnext").css({display: 'none'}, "fast");
+
+            $('#detailsnext').css('position', 'absolute');
+            $("#detailsnext").animate({left: '200%', opacity: '1'}, "slow");
+            //$("#detailsnext").animate({height:0},"fast");
+            //$("#resfav").animate({height:auto},"fast");
+
+            $("#resfav").animate({left: '1', opacity: '1'}, "slow");
+            $('#resfav').css('position', 'relative');
+
+
+        });
+
+        $("#yel").click(function () {
+            $("#renderreviews").hide();
+            $("#renderreviews").fadeIn(1000);
+
+        });
+
+        $("#gol").click(function () {
+            $("#renderreviews").hide();
+            $("#renderreviews").fadeIn(1000);
+
+        });
+
+
+    });
+
+
+</script>
+
+
+<div id="disp1" style="display: none">
+    <button id="myBtn">Open Modal</button>
+    <button id="shofav"></button>
+    <button id="hidefav"></button>
+</div>
+<script type="text/javascript">
+
+    // Get the modal
+    var modal = document.getElementById('myModal');
+
+    // Get the main container and the body
+    var body = document.getElementsByTagName('body');
+    // var container = document.getElementById('myContainer');
+
+    // Get the open button
+    var btnOpen = document.getElementById("myBtn");
+
+    // Get the close button
+    var btnClose = document.getElementById("closeModal");
+
+    // Open the modal
+    btnOpen.onclick = function () {
+        modal.className = "Modal is-visuallyHidden";
+        setTimeout(function () {
+            //container.className = "MainContainer is-blurred";
+            modal.className = "Modal";
+        }, 100);
+        //container.parentElement.className = "ModalOpen";
+    }
+
+    // Close the modal
+    btnClose.onclick = function () {
+        modal.className = "Modal is-hidden is-visuallyHidden";
+        body.className = "";
+        //container.className = "MainContainer";
+        //container.parentElement.className = "";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.className = "Modal is-hidden";
+            body.className = "";
+            //container.className = "MainContainer";
+            //container.parentElement.className = "";
+        }
+    }
+
+    function openhrs() {
+        $("#myBtn").click();
+    }
+
+    function favlcli() {
+        //if(document.getElementById("detailsnext").css.display='none'){
+        console.log("hhdjaflkajdksa");
+        listback();
+        //}
+
+    }
+
+
+</script>
+
+</body>
+
+</html>
